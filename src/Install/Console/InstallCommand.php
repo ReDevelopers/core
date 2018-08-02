@@ -193,8 +193,6 @@ class InstallCommand extends AbstractCommand
             $this->application->register(SearchServiceProvider::class);
             $this->application->register(PostServiceProvider::class);
 
-            $this->seedGroups();
-
             $this->createAdminUser();
 
             $this->enableBundledExtensions();
@@ -280,28 +278,6 @@ class InstallCommand extends AbstractCommand
         }
     }
 
-    protected function seedGroups()
-    {
-        Group::unguard();
-
-        $groups = [
-            [Group::ADMINISTRATOR_ID, 'Admin', 'Admins', '#B72A2A', 'fas fa-wrench'],
-            [Group::GUEST_ID, 'Guest', 'Guests', null, null],
-            [Group::MEMBER_ID, 'Member', 'Members', null, null],
-            [Group::MODERATOR_ID, 'Mod', 'Mods', '#80349E', 'fas fa-bolt']
-        ];
-
-        foreach ($groups as $group) {
-            Group::create([
-                'id' => $group[0],
-                'name_singular' => $group[1],
-                'name_plural' => $group[2],
-                'color' => $group[3],
-                'icon' => $group[4],
-            ]);
-        }
-    }
-
     protected function createAdminUser()
     {
         $admin = $this->adminUser;
@@ -318,7 +294,7 @@ class InstallCommand extends AbstractCommand
             $admin['password']
         );
 
-        $user->is_activated = 1;
+        $user->is_email_confirmed = 1;
         $user->save();
 
         $user->groups()->sync([Group::ADMINISTRATOR_ID]);
