@@ -46,10 +46,10 @@ use Flarum\Util\Str;
  * @property \Illuminate\Database\Eloquent\Collection $posts
  * @property \Illuminate\Database\Eloquent\Collection $comments
  * @property \Illuminate\Database\Eloquent\Collection $participants
- * @property Post|null $startPost
- * @property User|null $startUser
+ * @property Post|null $firstPost
+ * @property User|null $user
  * @property Post|null $lastPost
- * @property User|null $lastUser
+ * @property User|null $lastPostedUser
  * @property \Illuminate\Database\Eloquent\Collection $readers
  * @property bool $is_private
  */
@@ -123,7 +123,7 @@ class Discussion extends AbstractModel
         $discussion->created_at = Carbon::now();
         $discussion->user_id = $user->id;
 
-        $discussion->setRelation('startUser', $user);
+        $discussion->setRelation('user', $user);
 
         $discussion->raise(new Started($discussion));
 
@@ -184,12 +184,12 @@ class Discussion extends AbstractModel
     }
 
     /**
-     * Set the discussion's start post details.
+     * Set the discussion's first post details.
      *
      * @param Post $post
      * @return $this
      */
-    public function setStartPost(Post $post)
+    public function setFirstPost(Post $post)
     {
         $this->created_at = $post->created_at;
         $this->user_id = $post->user_id;
@@ -230,11 +230,11 @@ class Discussion extends AbstractModel
     }
 
     /**
-     * Refresh the discussion's comments count.
+     * Refresh the discussion's comment count.
      *
      * @return $this
      */
-    public function refreshCommentsCount()
+    public function refreshCommentCount()
     {
         $this->comment_count = $this->comments()->count();
 
@@ -242,11 +242,11 @@ class Discussion extends AbstractModel
     }
 
     /**
-     * Refresh the discussion's participants count.
+     * Refresh the discussion's participant count.
      *
      * @return $this
      */
-    public function refreshParticipantsCount()
+    public function refreshParticipantCount()
     {
         $this->participant_count = $this->participants()->count('users.id');
 
@@ -329,7 +329,7 @@ class Discussion extends AbstractModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function startPost()
+    public function firstPost()
     {
         return $this->belongsTo(Post::class, 'first_post_id');
     }
@@ -339,7 +339,7 @@ class Discussion extends AbstractModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function startUser()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -359,7 +359,7 @@ class Discussion extends AbstractModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function lastUser()
+    public function lastPostedUser()
     {
         return $this->belongsTo(User::class, 'last_posted_user_id');
     }

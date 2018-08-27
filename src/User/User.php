@@ -127,7 +127,7 @@ class User extends AbstractModel
             $user->raise(new Deleted($user));
         });
 
-        static::$dispatcher->fire(
+        static::$dispatcher->dispatch(
             new ConfigureUserPreferences
         );
     }
@@ -417,7 +417,7 @@ class User extends AbstractModel
      *
      * @return int
      */
-    public function getUnreadNotificationsCount()
+    public function getUnreadNotificationCount()
     {
         return $this->getUnreadNotifications()->count();
     }
@@ -447,7 +447,7 @@ class User extends AbstractModel
      *
      * @return int
      */
-    public function getNewNotificationsCount()
+    public function getNewNotificationCount()
     {
         return $this->getUnreadNotifications()->filter(function ($notification) {
             return $notification->created_at > $this->read_notifications_at ?: 0;
@@ -743,7 +743,7 @@ class User extends AbstractModel
      *
      * @return $this
      */
-    public function refreshCommentsCount()
+    public function refreshCommentCount()
     {
         $this->comment_count = $this->posts()->count();
 
@@ -755,7 +755,7 @@ class User extends AbstractModel
      *
      * @return $this
      */
-    public function refreshDiscussionsCount()
+    public function refreshDiscussionCount()
     {
         $this->discussion_count = $this->discussions()->count();
 

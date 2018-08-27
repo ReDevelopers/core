@@ -18,12 +18,15 @@
 }
 
 .ExtensionList {
+  columns: 3;
+  column-width: 410px;
   margin: 0;
   padding: 0;
   list-style: none;
   .clearfix();
 
   > li {
+    break-inside: avoid-column;
     text-align: left;
     position: relative;
     border-radius: 4px;
@@ -95,4 +98,14 @@
   text-align: center;
   margin-left: -50px;
   position: absolute;
+}
+
+@media (max-width: 410px) {
+   .ExtensionListItem-description {
+        display: none;
+    }
+    .ExtensionListItem-version {
+        display: block;
+        margin-top: 8px;
+    }
 }
