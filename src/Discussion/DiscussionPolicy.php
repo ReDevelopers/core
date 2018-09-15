@@ -94,7 +94,7 @@ class DiscussionPolicy extends AbstractPolicy
                 $query->whereNull('discussions.hidden_at')
                     ->orWhere('discussions.user_id', $actor->id)
                     ->orWhere(function ($query) use ($actor) {
-                        $this->events->fire(
+                        $this->events->dispatch(
                             new ScopeModelVisibility($query, $actor, 'hide')
                         );
                     });
